@@ -1,0 +1,70 @@
+ol.has-background, ul.has-background {
+    padding: 0;
+}
+
+ul.is-style-separator-list {
+	margin: 0;
+    padding: 0;
+    list-style: none;
+
+    li {
+        border-bottom: 1px dashed var(wp--custom--color--neutral-40);
+		padding: var(--space-1) 0;
+        display: flex;
+        justify-content: space-between;
+
+        a {
+            text-decoration: none;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            transition: translate .2s ease-in;
+            color: inherit;
+
+            &:hover {
+                translate: var(--space-05);
+                cursor: pointer;
+            }
+        }
+    }
+}
+
+ul.is-style-separator-list--icon {
+	margin: 0;
+    padding: 0;
+    list-style: none;
+
+    li {
+        border-bottom: 1px solid var(--wp--custom--color--neutral-30);
+		padding: var(--space-1) 0;
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+
+        a {
+            text-decoration: none;
+            width: 100%;
+            display: flex;
+            position: relative;
+            transition: translate .2s ease-in;
+            color: inherit;
+
+            &:hover {
+                translate: var(--space-05);
+                cursor: pointer;
+
+                &::after {
+                    right: 0;
+                }
+            }
+
+            &::after {
+                content: url(./assets/icons/arrow-right-secondary.svg);
+                right: .5rem;
+                position: absolute;
+                transition: .2s ease-in; 
+            }
+        }
+    }
+}
+

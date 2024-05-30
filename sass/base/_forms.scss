@@ -1,0 +1,38 @@
+.wpcf7-acceptance .wpcf7-list-item {
+	margin: 0;
+}
+
+.footer-form {
+
+	.wpcf7-list-item {
+		margin: 0;
+		width: 100%;
+	}
+
+	.wpcf7-form-control {
+		display: flex;
+		gap: var(--wp--custom--layout--block-gap);
+		margin: 1rem 0;
+	}
+
+	input[type=radio] {
+		display: none;
+	}
+
+	input[type=radio]+.wpcf7-list-item-label {
+		padding: 1rem;
+		margin-bottom: 0;
+		border: 2px solid;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		&:hover {
+			cursor: pointer;
+		}
+	}
+
+	input[type=radio]:checked+.wpcf7-list-item-label {
+		//border: 2px solid var(--wp--preset--color--accent);
+		font-weight: 600;
+	}
+}

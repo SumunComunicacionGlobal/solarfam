@@ -1,0 +1,85 @@
+.post-type-archive-proyectos {
+    
+    .rank-math-breadcrumb {
+        margin-block-start: 0;
+    }
+}
+
+.row-filters {
+    background: rgba(255, 255, 255, 0.30);
+    backdrop-filter: blur(8px);
+    padding: var(--wp--preset--spacing--20) var(--wp--preset--spacing--40);
+    max-width: var(--wp--style--global--content-size);
+    margin-left: auto !important;
+    margin-right: auto !important;
+    
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--wp--custom--layout--block-gap);
+    border-right: .5rem solid var(--wp--preset--color--secondary);
+    z-index: 2;
+    height: 8rem;
+    margin-top: -8rem;
+    position: relative;
+
+    @media ($below-tablet) {
+        padding: var(--wp--preset--spacing--20);
+        display: block;
+    }
+
+    .facetwp-facet {
+        margin-bottom: 0;
+    }
+
+    .toggle-gran-proyecto, .group-selectores {
+      display: flex;
+      align-items: center;
+      gap: var(--wp--preset--spacing--20);
+    }
+}
+
+
+
+.facetwp-facet.facetwp-type-checkboxes {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 24px;
+  
+    .facetwp-checkbox {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: var(--wp--custom--color--neutral-30);
+      padding-left: 0;
+      margin-bottom: 0;
+      transition: .4s;
+      border-radius: 1.5rem;
+      font-size: 0;
+    }
+      
+    .facetwp-checkbox:before {
+        position: absolute;
+        content: "";
+        height: 20px;
+        width: 20px;
+        left: 2px;
+        bottom: 2px;
+        border-radius: 50%;
+        background-color: var(--wp--preset--color--white);
+        transition: .4s;
+    }
+  
+    .facetwp-checkbox.checked {
+      background: var(--wp--preset--color--secondary) !important;
+      transition: .4s;
+    }
+  
+    .facetwp-checkbox.checked:before {
+      transform: translateX(16px);
+    }
+  }

@@ -1,0 +1,72 @@
+/*!
+Theme Name: Solarfam
+Theme URI: https://sumun.net
+Author: Sumun
+Author URI: https://sumun.net
+Description: Solarfam Full Site Editing Theme
+Version: 1.0.0
+Tested up to: 7.4
+Requires PHP: 8.2
+License: GNU General Public License v2 or later
+License URI: LICENSE
+Text Domain: solarfam
+Tags: full site editing, sass, 
+
+This theme, like WordPress, is licensed under the GPL.
+Use it to make something cool, have fun, and share what you've learned.
+
+*/
+
+/*--------------------------------------------------------------
+# Normalize
+--------------------------------------------------------------*/
+@import "vendor/normalize";
+
+
+/*--------------------------------------------------------------
+# Abstracts
+--------------------------------------------------------------*/
+@import "abstracts/mixins";
+
+
+/*--------------------------------------------------------------
+# Base
+--------------------------------------------------------------*/
+@import "base/typography";
+@import "base/flexbox";
+@import "base/lists";
+@import "base/spacer";
+@import "base/layout";
+@import "base/fields";
+@import "base/forms";
+@import "base/utilities";
+@import "base/aligments";
+
+/*--------------------------------------------------------------
+# Components
+--------------------------------------------------------------*/
+@import "components/buttons";
+@import "components/card";
+@import "components/breadcrumbs";
+@import "components/cover";
+@import "components/filter-by";
+@import "components/gallery";
+@import "components/group";
+@import "components/nav";
+@import "components/pagination";
+@import "components/query";
+@import "components/search";
+@import "components/slick";
+@import "components/social-icons";
+
+
+
+/*--------------------------------------------------------------
+# Pages
+--------------------------------------------------------------*/
+@import "parts/hero";
+@import "parts/homepage";
+@import "parts/projects";
+@import "parts/blog";
+@import "parts/footer";
+@import "parts/calculator";

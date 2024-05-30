@@ -1,0 +1,56 @@
+input[type="text"],
+input[type="email"],
+input[type="url"],
+input[type="password"],
+input[type="search"],
+input[type="number"],
+input[type="tel"],
+input[type="range"],
+input[type="date"],
+input[type="month"],
+input[type="week"],
+input[type="time"],
+input[type="datetime"],
+input[type="datetime-local"],
+input[type="color"],
+textarea {
+	border: 2px solid;
+	color: inherit;
+	background-color: transparent;
+	line-height: 1;
+	padding: 12px var(--wp--preset--spacing--10);
+	width: 100%;
+	max-height: 3rem;
+
+	&:focus {
+		//outline-color: var(--wp--preset--color--accent);
+	}
+
+	&::placeholder {
+		color: inherit;
+		opacity: 1; /* Firefox */
+		font-style: italic;
+	}
+	  
+	&::-ms-input-placeholder { /* Edge 12 -18 */
+		color: inherit;
+	}
+
+}
+
+select {
+	border: 1px solid var(--wp--custom--color--neutral-30);
+	padding: 8.5px var(--wp--preset--spacing--10);
+
+	&.facetwp-dropdown {
+		background-image: url(./assets/icons/folder-minus.svg);
+		background-repeat: no-repeat;
+		background-size: 1.5rem auto;
+		background-position: 0.5rem center;
+		padding: 7.5px 1rem 7.5px 2.5rem;
+	}
+}
+
+textarea {
+	width: 100%;
+}

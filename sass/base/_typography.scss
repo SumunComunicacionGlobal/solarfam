@@ -1,0 +1,12 @@
+.wp-block-post-title a {
+	text-decoration: none;
+}
+
+.has-heading-1-font-size,
+.has-heading-2-font-size,
+.has-heading-3-font-size,
+.has-heading-4-font-size {
+	line-height: var(--wp--custom--line-height--headings);
+}
+
+

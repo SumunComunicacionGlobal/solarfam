@@ -1,0 +1,8 @@
+.wp-block-gallery.has-nested-images {
+
+    figure.wp-block-image img[src$=".svg"] {
+        width: fit-content !important;
+    }
+
+}
+

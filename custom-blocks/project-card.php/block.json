@@ -1,0 +1,21 @@
+{
+  "apiVersion": 2,
+  "name": "acf/project-card",
+  "title": "Project Card",
+  "category": "design",
+  "icon": "info",
+  "keywords": ["Project", "Card", "Proyecto"],
+  "acf": {
+      "mode": "preview",
+      "renderTemplate": "project-card.php"
+  },
+  "attributes": {
+      "alignWide": {
+          "type": "string",
+          "default": "alignfull"
+      }
+  },
+  "supports": {
+      "jsx": true 
+  }
+}

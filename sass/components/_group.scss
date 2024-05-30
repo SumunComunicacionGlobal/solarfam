@@ -1,0 +1,50 @@
+.is-style-group-horizontal-scroll {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: calc(var(--wp--preset--spacing--10) / 2);
+    
+    padding: var(--wp--preset--spacing--10);
+    margin: 0;
+    
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-inline: contain;
+    scroll-behavior: smooth;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    
+    transition: all 0.2s;
+    will-change: transform;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+
+    &.active {
+        cursor: grabbing;
+        cursor: -webkit-grabbing;
+        transform: scale(1.02);
+    }
+
+    & > .wp-block-group, & > .wc-block-product, & > .wp-block-post {
+        flex: 0 0 auto;
+        max-width: 296px;
+        margin-block-start: 0;
+
+        @media ($below-mobile-xs) {
+            max-width: 242px;
+        }
+    }
+
+    & > .is-style-card--project {
+        flex: 0 0 100% !important;
+        margin-block-start: 0;
+        min-width: 40vw;
+    }
+
+    &:has(.is-style-card--project) {
+        padding: 0;
+        flex: 1;
+        gap: 0;
+    }
+}
