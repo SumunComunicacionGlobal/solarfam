@@ -27,23 +27,6 @@
     </div>
 </div>
 
-<?php
-	$testimonio_project = get_field('testimonio_project', $project_id);
-
-    if ($testimonio_project) {
-        echo '<div class="wp-block-cover wp-block-cover--testimonio">';
-            echo '<span aria-hidden="true" class="wp-block-cover__background has-secondary-background-color has-background-dim has-background-dim-100"></span>';
-            echo '<div class="wp-block-cover__inner-container has-global-padding is-layout-constrained wp-block-cover-is-layout-constrained">';
-
-                echo '<blockquote>';
-                    echo '"' . $testimonio_project . '"';
-                echo '</blockquote>';
-
-            echo '</div>';
-        echo '</div>';
-    }
-?>
-
 <div class="wp-block-group has-global-padding is-layout-constrained mt-0">
     <?php if (function_exists('rank_math_the_breadcrumbs')) rank_math_the_breadcrumbs(); ?>
 </div>
