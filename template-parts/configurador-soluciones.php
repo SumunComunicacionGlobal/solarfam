@@ -3,6 +3,8 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
+$contact_page_id = 57;
+
 /*
 Funciona con slick slider, así que el theme debería de estar cargándolo ya.
 
@@ -17,8 +19,27 @@ add_shortcode( 'configurador_soluciones', function() {
 
 */
 
-wp_enqueue_style( 'carousel-block-slick-style' );
-wp_enqueue_script( 'carousel-block-slick-script' );
+wp_enqueue_style(
+	'carousel-block-slick-style',
+	plugins_url( 'carousel-block/vendor/slick/slick.min.css' ),
+	[],
+	null,
+	false
+);
+ wp_enqueue_script(
+	'carousel-block-slick-script',
+	plugins_url( '/carousel-block/vendor/slick/slick.min.js' ),
+	['jquery'],
+	null,
+	false
+);
+wp_enqueue_script(
+	'carousel-block-slick-init',
+	plugins_url( 'carousel-block/vendor/slick/init.js' ),
+	[ 'jquery', 'carousel-block-slick-script' ],
+	null,
+	true
+);
 
 
 $cuestionario = array(
@@ -30,30 +51,34 @@ $cuestionario = array(
 			__( 'Cubierta', 'solarfam' ),
 			__( 'Suelo', 'solarfam' ),
 			__( 'Marquesinas', 'solarfam' ),
-		)
+		),
+		'default' => 1,
 	),
 	array(
-		'pregunta' => __( '¿Puedo certificar que la cubierta cumple con CTE?', 'solarfam' ),
+		'pregunta' => __( '¿Puedo certificar que la cubierta cumple con CTE (Código Técnico de Edificación)? <br><small>(Responder solo si has seleccionado instalación en cubierta)</small>', 'solarfam' ),
 		'respuestas' => array(
 			__( 'Sí', 'solarfam' ),
 			__( 'No', 'solarfam' ),
 			__( 'No lo sé', 'solarfam' ),
-		)
+		),
+		// 'default' => 3,
 	),
 	array(
 		'pregunta' => __( '¿Qué tipo de consumos tiene la empresa?', 'solarfam' ),
 		'respuestas' => array(
 			__( 'Principalmente electricidad', 'solarfam' ),
-			__( 'Principalmente gas', 'solarfam' ),
+			// __( 'Principalmente gas', 'solarfam' ),
 			__( 'Gas y electricidad', 'solarfam' ),
-		)
+		),
+		// 'default' => 1,
 	),
 	array(
 		'pregunta' => __( 'Sobre los consumos eléctricos de tu empresa: a lo largo de la semana…', 'solarfam' ),
 		'respuestas' => array(
 			__( 'Consumimos de lunes a domingo', 'solarfam' ),
 			__( 'Cerramos el fin de semana', 'solarfam' ),
-		)
+		),
+		// 'default' => 1,
 	),
 	array(
 		'pregunta' => __( 'Sobre los consumos eléctricos de tu empresa: a lo largo del día…', 'solarfam' ),
@@ -61,7 +86,8 @@ $cuestionario = array(
 			__( 'Consumimos tanto a la mañana como a la tarde', 'solarfam' ),
 			__( 'Interrumpimos nuestros consumos al mediodía', 'solarfam' ),
 			__( 'Sólo consumimos por la mañana, no por la tarde', 'solarfam' ),
-		)
+		),
+		// 'default' => 1,
 	),
 	array(
 		'pregunta' => __( '¿Cómo adquiriré la instalación?', 'solarfam' ),
@@ -69,7 +95,8 @@ $cuestionario = array(
 			__( 'Fondos propios', 'solarfam' ),
 			__( 'Financiación bancaria', 'solarfam' ),
 			__( '¿Hay otras opciones?', 'solarfam' ),
-		)
+		),
+		// 'default' => 2,
 	),
 );
 
@@ -88,28 +115,32 @@ $cuestionario = array(
 
 		<div class="slide-cuestionario pregunta">
 
-			<p class="h1"><?php echo $i_text; ?></p>
-			<p class="h3"><?php echo $slide['pregunta']; ?></p>
+			<p class="has-heading-1-font-size"><?php echo $i_text; ?></p>
+			<p class="has-subtitle-font-size"><strong><?php echo $slide['pregunta']; ?></strong></p>
+            <div class="respuestas">
+                <?php foreach ( $slide['respuestas'] as $index_respuesta => $respuesta ) { 
+                    
+                    $k = $index_respuesta + 1;
 
-			<?php foreach ( $slide['respuestas'] as $index_respuesta => $respuesta ) { 
-				
-				$k = $index_respuesta + 1;
-				?>
+                    $checked = ( isset( $slide['default'] ) && $k == $slide['default'] ) ? 'checked' : '';
+                    ?>
 
-				<div class="respuesta">
+                    <div class="respuesta">
 
-					<?php if ( $tipo == 'checkbox' ) { ?>
-						<input type="checkbox" name="preg<?php echo $i; ?>-resp<?php echo $k; ?>" id="preg<?php echo $i; ?>-resp<?php echo $k; ?>" value="preg<?php echo $i; ?>-resp<?php echo $k; ?>">
-						<label for="preg<?php echo $i; ?>-resp<?php echo $k; ?>"><?php echo $respuesta; ?></label>
-					<?php } else { ?>
-						<input type="radio" name="preg<?php echo $i; ?>" id="preg<?php echo $i; ?>-resp<?php echo $k; ?>" value="preg<?php echo $i; ?>-resp<?php echo $k; ?>">
-						<label for="preg<?php echo $i; ?>-resp<?php echo $k; ?>"><?php echo $respuesta; ?></label>
-					<?php } ?>
+                        <?php if ( $tipo == 'checkbox' ) { ?>
+                            <input <?php echo $checked; ?> type="checkbox" name="preg<?php echo $i; ?>-resp<?php echo $k; ?>" id="preg<?php echo $i; ?>-resp<?php echo $k; ?>" value="preg<?php echo $i; ?>-resp<?php echo $k; ?>">
+                            <label for="preg<?php echo $i; ?>-resp<?php echo $k; ?>"><?php echo $respuesta; ?></label>
+                        <?php } else { ?>
+                            <input <?php echo $checked; ?> type="radio" name="preg<?php echo $i; ?>" id="preg<?php echo $i; ?>-resp<?php echo $k; ?>" value="preg<?php echo $i; ?>-resp<?php echo $k; ?>">
+                            <label for="preg<?php echo $i; ?>-resp<?php echo $k; ?>"><?php echo $respuesta; ?></label>
+                        <?php } ?>
 
-				</div>
+                    </div>
 
-			<?php } 
-			
+                <?php } 
+                ?>
+            </div> <!-- respuestas -->
+			<?php
 			if ( $i == count( $cuestionario ) ) { ?>
 				<div class="wp-block-buttons">
 					<div class="wp-block-button">
@@ -128,63 +159,64 @@ $cuestionario = array(
 
 		<h3><?php _e( 'La solución es:', 'solarfam' ); ?></h3>
 
-		<div class="resultado-cuestionario">
+		<ul class="resultado-cuestionario is-style-arrow-list">
 
-			<p class="resultado-cuestionario-item" data-respuestas="preg1-resp1"><?php _e( 'Parece que la mejor solución consiste en una instalación fotovoltaica sobre cubierta.', 'solarfam' ); ?></p>
-			<p class="resultado-cuestionario-item" data-respuestas="preg1-resp2"><?php _e( 'Parece que la mejor solución consiste en una instalación fotovoltaica en suelo.', 'solarfam' ); ?></p>
-			<p class="resultado-cuestionario-item" data-respuestas="preg1-resp3"><?php _e( 'Parece que la mejor solución consiste en una instalación fotovoltaica en marquesinas. Podría ser interesante combinarla con cargadores para vehículos eléctricos.', 'solarfam' ); ?></p>
-			<p class="resultado-cuestionario-item" data-respuestas="preg1-resp1+preg1-resp2"><?php _e( 'Parece que la mejor solución consiste en una instalación fotovoltaica parte sobre la cubierta industrial y parte en suelo.', 'solarfam' ); ?></p>
-			<p class="resultado-cuestionario-item" data-respuestas="preg1-resp1+preg1-resp3"><?php _e( 'Parece que la mejor solución consiste en una instalación fotovoltaica parte sobre la cubierta y parte en marquesinas.', 'solarfam' ); ?></p>
-			<p class="resultado-cuestionario-item" data-respuestas="preg1-resp2+preg1-resp3"><?php _e( 'Parece que la mejor solución consiste en una instalación fotovoltaica parte en suelo y parte en marquesinas.', 'solarfam' ); ?></p>
-			<p class="resultado-cuestionario-item" data-respuestas="preg1-resp1+preg1-resp2+preg1-resp3"><?php _e( 'Parece que la mejor solución consiste en una instalación fotovoltaica parte en cubierta, parte en suelo y parte en marquesinas.', 'solarfam' ); ?></p>
+			<li class="resultado-cuestionario-item" data-respuestas="preg1-resp1"><?php _e( 'Parece que la mejor solución consiste en una instalación fotovoltaica sobre cubierta.', 'solarfam' ); ?></li>
+			<li class="resultado-cuestionario-item" data-respuestas="preg1-resp2"><?php _e( 'Parece que la mejor solución consiste en una instalación fotovoltaica en suelo.', 'solarfam' ); ?></li>
+			<li class="resultado-cuestionario-item" data-respuestas="preg1-resp3"><?php _e( 'Parece que la mejor solución consiste en una instalación fotovoltaica en marquesinas. Podría ser interesante combinarla con cargadores para vehículos eléctricos.', 'solarfam' ); ?></li>
+			<li class="resultado-cuestionario-item" data-respuestas="preg1-resp1+preg1-resp2"><?php _e( 'Parece que la mejor solución consiste en una instalación fotovoltaica parte sobre la cubierta industrial y parte en suelo.', 'solarfam' ); ?></li>
+			<li class="resultado-cuestionario-item" data-respuestas="preg1-resp1+preg1-resp3"><?php _e( 'Parece que la mejor solución consiste en una instalación fotovoltaica parte sobre la cubierta y parte en marquesinas.', 'solarfam' ); ?></li>
+			<li class="resultado-cuestionario-item" data-respuestas="preg1-resp2+preg1-resp3"><?php _e( 'Parece que la mejor solución consiste en una instalación fotovoltaica parte en suelo y parte en marquesinas.', 'solarfam' ); ?></li>
+			<li class="resultado-cuestionario-item" data-respuestas="preg1-resp1+preg1-resp2+preg1-resp3"><?php _e( 'Parece que la mejor solución consiste en una instalación fotovoltaica parte en cubierta, parte en suelo y parte en marquesinas.', 'solarfam' ); ?></li>
 
-			<p class="resultado-cuestionario-item" data-respuestas="preg2-resp1"><?php _e( 'Como podemos acreditar mediante un estudio estructural favorable que la estructura del edificio cumplirá con el Código Técnico de Edificación tras añadir la carga derivada de la instalación fotovoltaica, no será necesario realizar otro.', 'solarfam' ); ?></p>
-			<p class="resultado-cuestionario-item" data-respuestas="preg2-resp2"><?php _e( 'Para cumplir con el Código Técnico de Edificación será necesario realizar un estudio estructural. En el caso de obtener un resultado favorable (como ocurre en la mayoría de los casos), se procederá a ejecutar la instalación fotovoltaica; en caso negativo, se plantearán soluciones alternativas para poder llevar a cabo el proyecto fotovoltaico. Estas soluciones podrán consistir en una reubicación de los módulos fotovoltaicos en otras cubiertas o en la realización de un refuerzo estructural.', 'solarfam' ); ?></p>
-			<p class="resultado-cuestionario-item" data-respuestas="preg2-resp3"><?php _e( 'Para cumplir con el Código Técnico de Edificación será necesario realizar un estudio estructural. En el caso de obtener un resultado favorable (como ocurre en la mayoría de los casos), se procederá a ejecutar la instalación fotovoltaica; en caso negativo, se plantearán soluciones alternativas para poder llevar a cabo el proyecto fotovoltaico. Estas soluciones podrán consistir en una reubicación de los módulos fotovoltaicos en otras cubiertas o en la realización de un refuerzo estructural.', 'solarfam' ); ?></p>
+			<li class="resultado-cuestionario-item" data-respuestas="preg2-resp1"><?php _e( 'Como podemos acreditar mediante un estudio estructural favorable que la estructura del edificio cumplirá con el Código Técnico de Edificación tras añadir la carga derivada de la instalación fotovoltaica, no será necesario realizar otro.', 'solarfam' ); ?></li>
+			<li class="resultado-cuestionario-item" data-respuestas="preg2-resp2"><?php _e( 'Para cumplir con el Código Técnico de Edificación será necesario realizar un estudio estructural. En el caso de obtener un resultado favorable (como ocurre en la mayoría de los casos), se procederá a ejecutar la instalación fotovoltaica; en caso negativo, se plantearán soluciones alternativas para poder llevar a cabo el proyecto fotovoltaico. Estas soluciones podrán consistir en una reubicación de los módulos fotovoltaicos en otras cubiertas o en la realización de un refuerzo estructural.', 'solarfam' ); ?></li>
+			<li class="resultado-cuestionario-item" data-respuestas="preg2-resp3"><?php _e( 'Para cumplir con el Código Técnico de Edificación será necesario realizar un estudio estructural. En el caso de obtener un resultado favorable (como ocurre en la mayoría de los casos), se procederá a ejecutar la instalación fotovoltaica; en caso negativo, se plantearán soluciones alternativas para poder llevar a cabo el proyecto fotovoltaico. Estas soluciones podrán consistir en una reubicación de los módulos fotovoltaicos en otras cubiertas o en la realización de un refuerzo estructural.', 'solarfam' ); ?></li>
 
-			<p class="resultado-cuestionario-item" data-respuestas="preg3-resp1"><?php _e( 'Dado que los principales consumos de la empresa con eléctricos, la instalación fotovoltaica servirá para producir un ahorro en la factura eléctrica.', 'solarfam' ); ?></p>
-			<p class="resultado-cuestionario-item" data-respuestas="preg3-resp2"><?php _e( 'Dado que los principales consumos de la empresa son de gas, la instalación fotovoltaica podrá ser acompañada de una instalación de almacenamiento térmico para guardar la energía producida en la instalación fotovoltaica y utilizarla en los procesos productivos en forma de calor.', 'solarfam' ); ?></p>
-			<p class="resultado-cuestionario-item" data-respuestas="preg3-resp3"><?php _e( 'La instalación fotovoltaica se utilizará principalmante para el ahorro en la factura de electricidad y, en caso de generar energía excedentaria, estudiaremos la posibilidad de aprovecharla para sustituir tanto la compra de gas como la compra de electricidad mediante distintas opciones de almacenamiento de excedentes.', 'solarfam' ); ?></p>
+			<li class="resultado-cuestionario-item" data-respuestas="preg3-resp1"><?php _e( 'Dado que los principales consumos de la empresa son eléctricos, la instalación fotovoltaica servirá para producir un ahorro en la factura eléctrica.', 'solarfam' ); ?></li>
+			<!-- <li class="resultado-cuestionario-item" data-respuestas="preg3-resp2"><?php _e( 'Dado que los principales consumos de la empresa son de gas, la instalación fotovoltaica podrá ser acompañada de una instalación de almacenamiento térmico para guardar la energía producida en la instalación fotovoltaica y utilizarla en los procesos productivos en forma de calor.', 'solarfam' ); ?></li> -->
+			<!-- <li class="resultado-cuestionario-item" data-respuestas="preg3-resp3"><?php _e( 'La instalación fotovoltaica se utilizará principalmante para el ahorro en la factura de electricidad y, en caso de generar energía excedentaria, estudiaremos la posibilidad de aprovecharla para sustituir tanto la compra de gas como la compra de electricidad mediante distintas opciones de almacenamiento de excedentes.', 'solarfam' ); ?></li> -->
+			<li class="resultado-cuestionario-item" data-respuestas="preg3-resp2"><?php _e( 'La instalación fotovoltaica se utilizará principalmante para el ahorro en la factura de electricidad y, en caso de generar energía excedentaria, estudiaremos la posibilidad de aprovecharla para sustituir tanto la compra de gas como la compra de electricidad mediante distintas opciones de almacenamiento de excedentes.', 'solarfam' ); ?></li>
 			
 			<!-- Bat.elec.mediodía -->
-			<p class="resultado-cuestionario-item" data-respuestas="preg4-resp1+preg5-resp2"><?php _e( 'Como tendremos energía excedentaria al mediodía solar, podemos almacenar esa energía en una batería eléctrica y descargarla más tarde, cuando los precios de la electricidad sean más altos.', 'solarfam' ); ?></p>
+			<li class="resultado-cuestionario-item" data-respuestas="preg4-resp1+preg5-resp2"><?php _e( 'Como tendremos energía excedentaria al mediodía solar, podemos almacenar esa energía en una batería eléctrica y descargarla más tarde, cuando los precios de la electricidad sean más altos.', 'solarfam' ); ?></li>
 			<!-- Bat.elec.mediodía+finde -->
-			<p class="resultado-cuestionario-item" data-respuestas="preg4-resp2+preg5-resp2"><?php _e( 'Como tendremos energía excedentaria al mediodía solar y durante el fin de semana, podemos almacenar esa energía en una batería eléctrica y descargarla más tarde, cuando los precios de la electricidad sean más altos.', 'solarfam' ); ?></p>
+			<li class="resultado-cuestionario-item" data-respuestas="preg4-resp2+preg5-resp2"><?php _e( 'Como tendremos energía excedentaria al mediodía solar y durante el fin de semana, podemos almacenar esa energía en una batería eléctrica y descargarla más tarde, cuando los precios de la electricidad sean más altos.', 'solarfam' ); ?></li>
 			<!-- Bat.elec.tarde -->
-			<p class="resultado-cuestionario-item" data-respuestas="preg4-resp1+preg5-resp3"><?php _e( 'Como tendremos energía excedentaria a las tardes, podemos almacenar esa energía en una batería eléctrica y descargarla al día seguiente, antes de que empiece a producir la instalación fotovoltaica de nuevo.', 'solarfam' ); ?></p>
+			<li class="resultado-cuestionario-item" data-respuestas="preg4-resp1+preg5-resp3"><?php _e( 'Como tendremos energía excedentaria a las tardes, podemos almacenar esa energía en una batería eléctrica y descargarla al día seguiente, antes de que empiece a producir la instalación fotovoltaica de nuevo.', 'solarfam' ); ?></li>
 			<!-- Bat.elec.tarde+finde -->
-			<p class="resultado-cuestionario-item" data-respuestas="preg4-resp2+preg5-resp3"><?php _e( 'Como tendremos energía excedentaria a las tardes y durante el fin de semana, podemos almacenar esa energía en una batería eléctrica y descargarla al día seguiente, antes de que empiece a producir la instalación fotovoltaica de nuevo.', 'solarfam' ); ?></p>
+			<li class="resultado-cuestionario-item" data-respuestas="preg4-resp2+preg5-resp3"><?php _e( 'Como tendremos energía excedentaria a las tardes y durante el fin de semana, podemos almacenar esa energía en una batería eléctrica y descargarla al día seguiente, antes de que empiece a producir la instalación fotovoltaica de nuevo.', 'solarfam' ); ?></li>
 			<!-- Bat.ter.solo finde -->
-			<p class="resultado-cuestionario-item" data-respuestas="preg3-resp3+preg4-resp2+preg5-resp1"><?php _e( 'Además, a los excedentes que generará la instalación fotovoltaica durante los fines de semana se les podría dar uso mediante el almacenamiento térmico, guardándolos en forma de calor para reutilizarlos cuando sean necesarios en el proceso productivo.', 'solarfam' ); ?></p>
+			<li class="resultado-cuestionario-item" data-respuestas="preg3-resp3+preg4-resp2+preg5-resp1"><?php _e( 'Además, a los excedentes que generará la instalación fotovoltaica durante los fines de semana se les podría dar uso mediante el almacenamiento térmico, guardándolos en forma de calor para reutilizarlos cuando sean necesarios en el proceso productivo.', 'solarfam' ); ?></li>
 			<!-- Bat.ter.finde+med -->
-			<p class="resultado-cuestionario-item" data-respuestas="preg3-resp3+preg4-resp2+preg5-resp2"><?php _e( 'Además, a los excedentes que generará la instalación fotovoltaica durante los fines de semana y durante el mediodía solar se les podría dar uso mediante el almacenamiento térmico, guardándolos en forma de calor para reutilizarlos cuando sean necesarios en el proceso productivo.', 'solarfam' ); ?></p>
+			<li class="resultado-cuestionario-item" data-respuestas="preg3-resp3+preg4-resp2+preg5-resp2"><?php _e( 'Además, a los excedentes que generará la instalación fotovoltaica durante los fines de semana y durante el mediodía solar se les podría dar uso mediante el almacenamiento térmico, guardándolos en forma de calor para reutilizarlos cuando sean necesarios en el proceso productivo.', 'solarfam' ); ?></li>
 			<!-- Bat.ter.finde+tarde -->
-			<p class="resultado-cuestionario-item" data-respuestas="preg3-resp3+preg4-resp2+preg5-resp3"><?php _e( 'Además, a los excedentes que generará la instalación fotovoltaica durante los fines de semana y durante las tardes de los días de entre semana se les podría dar uso mediante el almacenamiento térmico, guardándolos en forma de calor para reutilizarlos cuando sean necesarios en el proceso productivo.', 'solarfam' ); ?></p>
+			<li class="resultado-cuestionario-item" data-respuestas="preg3-resp3+preg4-resp2+preg5-resp3"><?php _e( 'Además, a los excedentes que generará la instalación fotovoltaica durante los fines de semana y durante las tardes de los días de entre semana se les podría dar uso mediante el almacenamiento térmico, guardándolos en forma de calor para reutilizarlos cuando sean necesarios en el proceso productivo.', 'solarfam' ); ?></li>
 			<!-- Vertido a red -->
-			<p class="resultado-cuestionario-item" data-respuestas="preg3-resp1+preg4-resp2+preg5-resp1"><?php _e( 'Como el patrón de consumos de la empresa no genera suficiente energía excedentaria como para rentabilizar un sistema de acumulación, podrá valorarse la opción de verter el excedente a la red, obteniendo a cambio el precio pactado de compensación con la comercializadora (en caso de instalaciones en baja tensiones inferiores a 100 kW de potencia nominal) o el precio de venta del mercado mayorista.', 'solarfam' ); ?></p>
+			<li class="resultado-cuestionario-item" data-respuestas="preg3-resp1+preg4-resp2+preg5-resp1"><?php _e( 'Como el patrón de consumos de la empresa no genera suficiente energía excedentaria como para rentabilizar un sistema de acumulación, podrá valorarse la opción de verter el excedente a la red, obteniendo a cambio el precio pactado de compensación con la comercializadora (en caso de instalaciones en baja tensión inferiores a 100 kW de potencia nominal) o el precio de venta del mercado mayorista.', 'solarfam' ); ?></li>
 			<!-- Nada -->
 
-			<p class="resultado-cuestionario-item" data-respuestas="preg6-resp1"><?php _e( 'Como la instalación se sufragará mediante fondos propios, no será necesario compartir el ahorro producido por la instalación con ninguna entidad financiadora.', 'solarfam' ); ?></p>
-			<p class="resultado-cuestionario-item" data-respuestas="preg6-resp2"><?php _e( 'Para ayudar a nuestros clientes a adquirir el sistema de autoconsumo, disponemos de distintas acuerdos de colaboración con entidades financieras tradicionales con las que financiar la instalación mediante préstamo bancario o formatos de leasing.', 'solarfam' ); ?></p>
-			<p class="resultado-cuestionario-item" data-respuestas="preg6-resp3"><?php _e( 'Para ayudar a nuestros clientes a adquirir el sistema de autoconsumo sin realizar una inversión inicial, disponemos de distintas modalidades de financiación que incluyen desde opciones a más corto plazo (como la compravenat a plazos) hasta opciones a más largo plazo (como los PPA fijos o indexados).', 'solarfam' ); ?></p>
+			<li class="resultado-cuestionario-item" data-respuestas="preg6-resp1"><?php _e( 'Como la instalación se sufragará mediante fondos propios, no será necesario compartir el ahorro producido por la instalación con ninguna entidad financiadora.', 'solarfam' ); ?></li>
+			<li class="resultado-cuestionario-item" data-respuestas="preg6-resp2"><?php _e( 'Para ayudar a nuestros clientes a adquirir el sistema de autoconsumo, disponemos de distintas acuerdos de colaboración con entidades financieras tradicionales con las que financiar la instalación mediante préstamo bancario o formatos de leasing.', 'solarfam' ); ?></li>
+			<li class="resultado-cuestionario-item" data-respuestas="preg6-resp3"><?php _e( 'Para ayudar a nuestros clientes a adquirir el sistema de autoconsumo sin realizar una inversión inicial, disponemos de distintas modalidades de financiación que incluyen desde opciones a más corto plazo (como la compraventa a plazos) hasta opciones a más largo plazo (como los PPA fijos o indexados).', 'solarfam' ); ?></li>
 
-		</div>
+		</ul>
 
 		<div class="wp-block-buttons">
 			<div class="wp-block-button">
-				<a href="<?php echo get_home_url(); ?>/contacto/" class="wp-block-button__link"><?php _e( '¿Te ayudamos?', 'solarfam' ); ?></a>
+				<a href="<?php echo get_the_permalink( $contact_page_id ); ?>" class="wp-block-button__link"><?php _e( '¿Te ayudamos?', 'solarfam' ); ?></a>
 			</div>
 		</div>
 
 		<?php if( current_user_can( 'manage_options' ) ) { ?>
-			<div id="data-debug"></div>
+			<!-- <div id="data-debug"></div> -->
 		<?php } ?>
 
 	</div>
 
 </div>
 
-<div class="contador has-large-font-size has-text-align-right"></div>
+<div class="contador"></div>
 
 <style>
 	.resultado-cuestionario-item {
@@ -203,17 +235,35 @@ $cuestionario = array(
 
 		var $counter = $('.contador');
 		var $slider = $('.slider-cuestionario');
+		var slideCount = 1;
+		var currentSlideCuestionario = 0;
 
-		$slider.on('init reInit afterChange', function (event, slick, currentSlide, nextSlide) {
+		$slider.on('init reInit beforeChange', function (event, slick, currentSlide, nextSlide) {
 			//currentSlide is undefined on init -- set it to 0 in this case (currentSlide is 0 based)
-			var i = (currentSlide ? currentSlide : 0) + 1;
-			$counter.html( '<span class="current_slide">' + i + '</span>/<span class="total_slides"> ' + slick.slideCount + '</span>');
+			var i = (nextSlide ? nextSlide : 0) + 1;
+			currentSlideCuestionario = i;
+			slideCount = slick.slideCount - 1;
+			$counter.html( '<span class="current_slide">' + i + '</span>&nbsp;/&nbsp;<span class="total_slides">' + slideCount + '</span>');
+			// si es la penúltima slide, oculta el botón de ir a siguiente
+			if ( i >= slideCount ) {
+				$('.slick-next').css('display', 'none');
+			} else {
+				$('.slick-next').css('display', 'flex');
+			}
+
+			if ( i > slideCount ) {
+				$('.contador').css('display', 'none');
+			} else {
+				$('.contador').css('display', 'block');
+			}
+
 		});
 
 		// on radio change, go to next slide with 500ms delay
 		$('.slide-cuestionario input[type="radio"]').on('change', function() {
 			setTimeout( function() {
-				$('.slider-cuestionario').slick('slickNext');
+				if ( currentSlideCuestionario < slideCount )
+					$('.slider-cuestionario').slick('slickNext');
 			}, 500);
 		});
 
@@ -233,7 +283,8 @@ $cuestionario = array(
 			infinite: false,
 			speed: 500,
 			slidesToShow: 1,
-			adaptiveHeight: true
+			adaptiveHeight: false,
+			draggable: false
 		});
 
 	});
@@ -253,15 +304,26 @@ $cuestionario = array(
 			var respuesta45 = [];
 			var respuesta345 = [];
 
-			if ( $(this).attr('name') == 'preg3' ) {
-				
-				if( $(this).val() == 'preg3-resp2' ) {
-					$('input[name="preg4"], input[name="preg5"]').prop('checked', false).prop('disabled', true);
+			// Desactivar preguntas según respuesta a la pregunta 1
+			if ( $(this).val() == 'preg1-resp1' ) {
+				if ( $(this).is(':checked') ) {
+					$('input[name="preg2"]').prop('disabled', false);
 				} else {
-					$('input[name="preg4"], input[name="preg5"]').prop('disabled', false);
+					$('input[name="preg2"]').prop('checked', false).prop('disabled', true);
 				}
-
 			}
+
+
+			// Desactivar preguntas según respuesta a la pregunta 3
+			// if ( $(this).attr('name') == 'preg3' ) {
+				
+			// 	if( $(this).val() == 'preg3-resp2' ) {
+			// 		$('input[name="preg4"], input[name="preg5"]').prop('checked', false).prop('disabled', true);
+			// 	} else {
+			// 		$('input[name="preg4"], input[name="preg5"]').prop('disabled', false);
+			// 	}
+
+			// }
 
 			$('.slide-cuestionario').each( function() {
 
