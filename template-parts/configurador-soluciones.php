@@ -19,6 +19,8 @@ add_shortcode( 'configurador_soluciones', function() {
 
 */
 
+/* El plugin Carousel Slides ya no funciona con Slick, así que lo tenemos que cargar en el theme */
+/*
 wp_enqueue_style(
 	'carousel-block-slick-style',
 	plugins_url( 'carousel-block/vendor/slick/slick.min.css' ),
@@ -37,6 +39,27 @@ wp_enqueue_script(
 	'carousel-block-slick-init',
 	plugins_url( 'carousel-block/vendor/slick/init.js' ),
 	[ 'jquery', 'carousel-block-slick-script' ],
+	null,
+	true
+);
+*/
+
+wp_enqueue_style(
+	'theme-slick-style',
+	get_template_directory_uri() . '/assets/js/slick/slick.css',
+	[],
+	null
+);
+wp_enqueue_style(
+	'theme-slick-theme-style',
+	get_template_directory_uri() . '/assets/js/slick/slick-theme.css',
+	[],
+	null
+);
+wp_enqueue_script(
+	'theme-slick-script',
+	get_template_directory_uri() . '/assets/js/slick/slick.min.js',
+	['jquery'],
 	null,
 	true
 );
