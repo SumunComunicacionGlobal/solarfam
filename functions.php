@@ -20,6 +20,30 @@ if ( ! function_exists( 'smn_styles' ) ) :
 		$theme_version = wp_get_theme()->get( 'Version' );
 
 		$version_string = is_string( $theme_version ) ? $theme_version : false;
+
+		    // Register Slick Carousel styles and script
+		    wp_register_style(
+		      'slick-style',
+		      get_template_directory_uri() . '/assets/js/slick/slick.css',
+		      array(),
+		      $version_string
+		    );
+		
+		    wp_register_style(
+		      'slick-theme-style',
+		      get_template_directory_uri() . '/assets/js/slick/slick-theme.css',
+		      array('slick-style'),
+		      $version_string
+		    );
+		
+		    wp_register_script(
+		      'slick-script',
+		      get_template_directory_uri() . '/assets/js/slick/slick.min.js',
+		      array('jquery'),
+		      $version_string,
+		      true
+		    );
+
 		wp_register_style(
 			'smn-style',
 			get_template_directory_uri() . '/style.css',
